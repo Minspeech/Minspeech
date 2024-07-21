@@ -143,8 +143,8 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(os.getcwd(), args.base_dir), exist_ok=True)
 
     # Define paths for labeled and unlabeled data
-    label_path = r"resource/minspeech/label/list"
-    unlabel_path = r"resource/minspeech/unlabel/list"
+    label_path = r"resource/label/list"
+    unlabel_path = r"resource/unlabel/list"
 
     # Set the episode audio list location based on whether the data is labeled or not
     episodeaudio_loc = label_path if args.labeled == 'True' else unlabel_path
