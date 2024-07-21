@@ -65,4 +65,7 @@ For labeled audio, use the script we provide to cut the audio, and for unlabeled
 python crop.py
 ```
 
+## License
+The dataset is licensed under the CC BY-NC-SA 4.0 license. This means that you can share and adapt the dataset for non-commercial purposes as long as you provide proper attribution and distribute your contributions under the same license.
 
+Important: The dataset we release contains only annotated data, including YouTube links and transcription labels. We do not release audio or video data, and it is the responsibility of users to decide whether and how to download video data, and whether their intended purpose of downloading the data is legal in their country.
