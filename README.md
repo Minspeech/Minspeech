@@ -3,7 +3,6 @@
 A Corpus of Southern Min Dialect for Automatic Speech Recognition
 
 [**Official website**](https://minspeech.github.io/)
-| [**Paper**]()
 
 ## Resource
 Let's start with obtaining the [resource](https://drive.google.com/drive/folders/1tGurSeeWALcBKKmmpKQQq7p4s-1o-Vce) files.
