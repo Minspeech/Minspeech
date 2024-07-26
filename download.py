@@ -75,53 +75,61 @@ def job_audio(urls, series, series_path, downloaded_urls):
             continue
         else:
             downloaded_urls.append(url)
-
+        
+        try:
         # Options for downloading audio
-        ydl_opts_audio = {
-            'format': 'bestaudio',
-            'outtmpl': output_template,
-            'noplaylist': True,
-            'ignoreerrors': True,
-            'max_sleep_interval': 0.2,
-            'verbose': False,
-            'quiet': True,
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'wav',
-                'preferredquality': '192',
-            }],
-            'postprocessor_args': [
-                '-ar', '16000',
-                '-strict', '-2',
-                '-async', '1', '-r', '25'
-            ],
-        }
+            ydl_opts_audio = {
+                'format': 'bestaudio',
+                'outtmpl': output_template,
+                'noplaylist': True,
+                'ignoreerrors': True,
+                'max_sleep_interval': 0.2,
+                'verbose': False,
+                'quiet': True,
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'wav',
+                    'preferredquality': '192',
+                }],
+                'postprocessor_args': [
+                    '-ar', '16000',
+                    '-strict', '-2',
+                    '-async', '1', '-r', '25'
+                ],
+            }
         
-        # Download audio
-        with yt_dlp.YoutubeDL(ydl_opts_audio) as ydl:
-            error_code = ydl.download([url])
-        
-        # Options for downloading subtitles
-        ydl_opts_sub = {
-            'writesubtitles': True,
-            'subtitleslangs': ['zh-TW'],
-            'skip_download': True,
-            'outtmpl': vtt_file
-        }
-        
-        # Download subtitles
-        with yt_dlp.YoutubeDL(ydl_opts_sub) as ydl:
-            error_code = ydl.download([url])
-        
-        # Rename the subtitle file to remove the language suffix if it exists
-        if os.path.exists(f"{vtt_file}.zh-TW.vtt"):
-            os.rename(f"{vtt_file}.zh-TW.vtt", vtt_file)
+            # Download audio
+            with yt_dlp.YoutubeDL(ydl_opts_audio) as ydl:
+                error_code = ydl.download([url])
+            
+            # Ensure the file has the correct .wav extension
+            if not wav_file.endswith('.wav'):
+                os.rename(wav_file, wav_file + '.wav')
 
-        file_num += 1
+            # Options for downloading subtitles
+            ydl_opts_sub = {
+                'writesubtitles': True,
+                'subtitleslangs': ['zh-TW'],
+                'skip_download': True,
+                'outtmpl': vtt_file
+            }
+            
+            # Download subtitles
+            with yt_dlp.YoutubeDL(ydl_opts_sub) as ydl:
+                error_code = ydl.download([url])
+            
+            # Rename the subtitle file to remove the language suffix if it exists
+            if os.path.exists(f"{vtt_file}.zh-TW.vtt"):
+                os.rename(f"{vtt_file}.zh-TW.vtt", vtt_file)
+
+            # Convert subtitles to Simplified Chinese and remove punctuation
+            if os.path.exists(vtt_file):
+                convert_subtitle_to_simplified(vtt_file)
+            
+        except Exception as e:
+            logging.error(f"Failed to download {url}: {str(e)}")
         
-        # Convert subtitles to Simplified Chinese and remove punctuation
-        if os.path.exists(vtt_file):
-            convert_subtitle_to_simplified(vtt_file)
+        file_num += 1
 
 # Split dictionary into multiple chunks for parallel processing
 def split_dict(data, num_splits):
